@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>코엑스 그랜드볼룸 | 베뉴픽</title>
+<meta name="description" content="코엑스 그랜드볼룸 실사용자 인증 리뷰, AI 장단점 요약, 항목별 만족도 대시보드." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="nav-bar">
+  <a href="index.html" class="nav-logo"><span class="dot"></span>VenuePick</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">시설 찾기</a>
+    <a href="mypage.html" class="nav-link">마이페이지</a>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-outline btn-sm">로그인</button>
+  </div>
+  <button class="nav-toggle" aria-label="메뉴 열기"></button>
+</nav>
+
+<!-- 기본 정보 (라이트) -->
+<main class="content-band">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">시설 찾기</a> / 컨벤션홀</div>
+
+    <div class="detail-header">
+      <div class="detail-thumb"></div>
+      <div class="detail-info">
+        <h1 class="detail-title">코엑스 그랜드볼룸</h1>
+        <p class="detail-sub">서울 강남구 영동대로 513 · 컨벤션홀 · 최대 3,000명 수용</p>
+        <div class="detail-rating-row">
+          <span class="stars">★★★★★</span>
+          <span class="rating-num lg">4.6</span>
+          <span class="review-count">리뷰 132개 · 인증 리뷰 68%</span>
+        </div>
+        <button class="btn btn-primary" data-open-review-modal>리뷰 작성하기</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- AI 요약 + 대시보드 (다크) -->
+<section class="content-band-dark">
+  <div class="container">
+
+    <div class="glass-card-dark ai-summary-card fade-up">
+      <div class="ai-summary-head">
+        <span class="badge-ai">AI 요약</span>
+        <h3>132개 리뷰에서 자동으로 뽑은 장단점</h3>
+      </div>
+      <div class="ai-summary-grid">
+        <div class="ai-col pros">
+          <h4>장점</h4>
+          <ul>
+            <li>네트워크·와이파이가 안정적이라 온라인 병행 행사에도 문제없었다는 후기가 많아요.</li>
+            <li>하역장 접근성이 좋아 대형 부스 반입·반출이 수월하다는 평가가 반복돼요.</li>
+            <li>현장 스태프의 응대가 빠르고 친절하다는 언급이 꾸준해요.</li>
+          </ul>
+        </div>
+        <div class="ai-col cons">
+          <h4>단점</h4>
+          <ul>
+            <li>성수기 대관료가 높은 편이라는 의견이 있어요.</li>
+            <li>피크타임 주차 대기가 길다는 후기가 반복돼요.</li>
+            <li>일부 구역은 소음이 옆 홀까지 전달된다는 지적이 있어요.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ai-keywords">
+        <span class="ai-keyword">#네트워크안정</span>
+        <span class="ai-keyword">#하역접근편리</span>
+        <span class="ai-keyword">#친절한스태프</span>
+        <span class="ai-keyword">#높은대관료</span>
+        <span class="ai-keyword">#주차대기</span>
+      </div>
+    </div>
+
+    <div class="stat-grid" style="margin-top:24px;">
+      <div class="glass-card-dark stat-card fade-up">
+        <div class="stat-label">평균 평점</div>
+        <div class="stat-value">4.6<small>/ 5.0</small></div>
+      </div>
+      <div class="glass-card-dark stat-card fade-up">
+        <div class="stat-label">전체 리뷰 수</div>
+        <div class="stat-value">132<small>건</small></div>
+      </div>
+      <div class="glass-card-dark stat-card fade-up">
+        <div class="stat-label">인증 리뷰 비율</div>
+        <div class="stat-value">68<small>%</small></div>
+      </div>
+    </div>
+
+    <div class="insight-grid">
+      <div class="glass-card-dark chart-card fade-up" data-donut>
+        <h4>항목별 만족도</h4>
+        <div class="donut-wrap">
+          <div class="donut" data-segments='[
+            {"label":"시설","value":4.8,"color":"#3e6bff"},
+            {"label":"서비스","value":4.5,"color":"#4f8cff"},
+            {"label":"접근성","value":4.4,"color":"#6fa0ff"},
+            {"label":"가격","value":3.9,"color":"#8ab4ff"}
+          ]'>
+            <div class="donut-center"><div class="num">4.4</div><div class="lbl">평균</div></div>
+          </div>
+          <div class="donut-legend"></div>
+        </div>
+      </div>
+
+      <div class="glass-card-dark wordcloud-card fade-up">
+        <h4>리뷰 워드클라우드</h4>
+        <div class="wordcloud" data-words="네트워크 안정,9,하역 접근성,7,넓은 로비,8,친절한 스태프,9,가격 합리적,4,주차 편리,5,대기시간 김,3,소음 적음,6"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 리뷰 리스트 (라이트) -->
+<section class="content-band">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">실사용자 리뷰</div>
+      <h2 class="section-title">이용자 리뷰 132개</h2>
+    </div>
+
+    <div class="review-list">
+
+      <div class="glass-card review-card fade-up">
+        <div class="review-top">
+          <div class="review-author">
+            <div class="avatar">P</div>
+            <div>
+              <div class="review-name">PCO 담당 · 익명</div>
+              <div class="review-meta">2026.06 이용</div>
+            </div>
+          </div>
+          <span class="badge-verified">✓ 인증된 이용 후기</span>
+        </div>
+        <div class="review-rating-row">
+          <span class="rating-chip">가격 <span class="rating-num">★4</span></span>
+          <span class="rating-chip">접근성 <span class="rating-num">★5</span></span>
+          <span class="rating-chip">시설 <span class="rating-num">★5</span></span>
+          <span class="rating-chip">서비스 <span class="rating-num">★4</span></span>
+        </div>
+        <p class="review-body">국제 컨퍼런스 800명 규모로 진행했는데 네트워크가 끊기지 않아 온라인 동시 송출도 무리 없었어요. 하역장이 가까워서 부스 세팅도 예상보다 빨리 끝났습니다.</p>
+      </div>
+
+      <div class="glass-card review-card fade-up">
+        <div class="review-top">
+          <div class="review-author">
+            <div class="avatar">S</div>
+            <div>
+              <div class="review-name">사내 이벤트 담당 · 익명</div>
+              <div class="review-meta">2026.04 이용</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-rating-row">
+          <span class="rating-chip">가격 <span class="rating-num">★3</span></span>
+          <span class="rating-chip">접근성 <span class="rating-num">★4</span></span>
+          <span class="rating-chip">시설 <span class="rating-num">★4</span></span>
+          <span class="rating-chip">서비스 <span class="rating-num">★5</span></span>
+        </div>
+        <p class="review-body">스태프 응대는 정말 좋았는데, 성수기라 그런지 대관료가 예상보다 높았어요. 주차장 진입 대기가 좀 길었던 점은 아쉬웠습니다.</p>
+      </div>
+
+      <div class="glass-card review-card fade-up">
+        <div class="review-top">
+          <div class="review-author">
+            <div class="avatar">F</div>
+            <div>
+              <div class="review-name">프리랜서 기획자 · 익명</div>
+              <div class="review-meta">2026.02 이용</div>
+            </div>
+          </div>
+          <span class="badge-verified">✓ 인증된 이용 후기</span>
+        </div>
+        <div class="review-rating-row">
+          <span class="rating-chip">가격 <span class="rating-num">★4</span></span>
+          <span class="rating-chip">접근성 <span class="rating-num">★5</span></span>
+          <span class="rating-chip">시설 <span class="rating-num">★5</span></span>
+          <span class="rating-chip">서비스 <span class="rating-num">★4</span></span>
+        </div>
+        <p class="review-body">옆 홀 행사 소음이 살짝 들리는 구간이 있었지만 전체적으로 동선이 넓고 쾌적했어요. 재이용 의사 있습니다.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div>
+      <div class="footer-brand">VenuePick</div>
+      <div>이해관계 없는 실사용자 인증 리뷰로 MICE 시설·벤더 선정의 정보 비대칭을 해소합니다.</div>
+    </div>
+    <div>© 2026 VenuePick. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- 리뷰 작성 모달 -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal-review">
+    <div class="modal-head">
+      <h3>리뷰 작성</h3>
+      <button class="modal-close" data-close-modal aria-label="닫기">×</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">카테고리별 평점</label>
+      <div class="rating-input-row">
+        <span class="cat-name">가격</span>
+        <div class="star-picker" data-value="0">
+          <button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button>
+        </div>
+      </div>
+      <div class="rating-input-row">
+        <span class="cat-name">접근성</span>
+        <div class="star-picker" data-value="0">
+          <button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button>
+        </div>
+      </div>
+      <div class="rating-input-row">
+        <span class="cat-name">시설</span>
+        <div class="star-picker" data-value="0">
+          <button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button>
+        </div>
+      </div>
+      <div class="rating-input-row">
+        <span class="cat-name">서비스</span>
+        <div class="star-picker" data-value="0">
+          <button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="reviewText">이용 경험을 남겨주세요 (최소 20자)</label>
+      <textarea class="form-textarea" id="reviewText" placeholder="예: 네트워크가 안정적이었고, 하역장 접근이 편리했어요..."></textarea>
+      <div class="char-counter">0 / 20자 이상</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">이용 시기</label>
+      <input type="month" class="filter-select" style="width:100%;" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">영수증·계약서 첨부 (선택 — 첨부 시 인증 뱃지 부여)</label>
+      <label class="form-file">
+        📎 파일을 선택하거나 여기로 끌어다 놓으세요
+        <input type="file" class="form-file-input" accept="image/*,.pdf" hidden />
+      </label>
+      <div class="file-hint">이미지 또는 PDF, 5MB 이하</div>
+      <div class="file-error"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-close-modal>취소</button>
+      <button class="btn btn-primary" data-submit-review disabled>제출하기</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

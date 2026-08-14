@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>마이페이지 | 베뉴픽</title>
+<meta name="description" content="내가 작성한 리뷰를 모아보고 수정·삭제할 수 있어요." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="nav-bar">
+  <a href="index.html" class="nav-logo"><span class="dot"></span>VenuePick</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">시설 찾기</a>
+    <a href="mypage.html" class="nav-link active">마이페이지</a>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-outline btn-sm">로그아웃</button>
+  </div>
+  <button class="nav-toggle" aria-label="메뉴 열기"></button>
+</nav>
+
+<main class="content-band">
+  <div class="container">
+
+    <div class="glass-card" style="padding:24px; display:flex; align-items:center; gap:16px; margin-bottom:32px;">
+      <div class="avatar" style="width:48px; height:48px; font-size:18px;">P</div>
+      <div>
+        <div class="review-name" style="font-size:16px;">PCO 담당 · 익명</div>
+        <div class="review-meta">venuepick_user@gmail.com</div>
+      </div>
+    </div>
+
+    <div class="mypage-header">
+      <div>
+        <div class="section-eyebrow">마이페이지</div>
+        <h2 class="section-title">내가 쓴 리뷰</h2>
+        <p class="section-desc"><span id="myReviewCount">3</span>개의 리뷰를 작성했어요.</p>
+      </div>
+    </div>
+
+    <div class="review-list" id="myReviewList">
+
+      <div class="glass-card my-review-card fade-up"
+           data-price="4" data-access="5" data-facility="5" data-service="4"
+           data-month="2026-06"
+           data-text="국제 컨퍼런스 800명 규모로 진행했는데 네트워크가 끊기지 않아 온라인 동시 송출도 무리 없었어요. 하역장이 가까워서 부스 세팅도 예상보다 빨리 끝났습니다.">
+        <div class="review-top">
+          <div>
+            <div class="my-review-facility"><a href="facility.html">코엑스 그랜드볼룸</a></div>
+            <div class="review-meta">2026.06 이용 · 2026.06.15 작성</div>
+          </div>
+          <span class="badge-verified">✓ 인증된 이용 후기</span>
+        </div>
+        <div class="review-rating-row">
+          <span class="rating-chip">가격 <span class="rating-num">★4</span></span>
+          <span class="rating-chip">접근성 <span class="rating-num">★5</span></span>
+          <span class="rating-chip">시설 <span class="rating-num">★5</span></span>
+          <span class="rating-chip">서비스 <span class="rating-num">★4</span></span>
+        </div>
+        <p class="review-body">국제 컨퍼런스 800명 규모로 진행했는데 네트워크가 끊기지 않아 온라인 동시 송출도 무리 없었어요. 하역장이 가까워서 부스 세팅도 예상보다 빨리 끝났습니다.</p>
+        <div class="my-review-actions">
+          <button class="btn btn-ghost btn-sm" data-edit-review>수정</button>
+          <button class="btn btn-ghost btn-sm danger" data-delete-review>삭제</button>
+        </div>
+      </div>
+
+      <div class="glass-card my-review-card fade-up"
+           data-price="3" data-access="4" data-facility="5" data-service="5"
+           data-month="2026-03"
+           data-text="넓은 로비와 동선이 인상적이었어요. 다만 성수기라 그런지 대관료가 다소 부담스러웠습니다. 재이용 의사는 있어요.">
+        <div class="review-top">
+          <div>
+            <div class="my-review-facility"><a href="facility.html">그랜드 하얏트 서울 연회장</a></div>
+            <div class="review-meta">2026.03 이용 · 2026.03.22 작성</div>
+          </div>
+          <span class="badge-verified">✓ 인증된 이용 후기</span>
+        </div>
+        <div class="review-rating-row">
+          <span class="rating-chip">가격 <span class="rating-num">★3</span></span>
+          <span class="rating-chip">접근성 <span class="rating-num">★4</span></span>
+          <span class="rating-chip">시설 <span class="rating-num">★5</span></span>
+          <span class="rating-chip">서비스 <span class="rating-num">★5</span></span>
+        </div>
+        <p class="review-body">넓은 로비와 동선이 인상적이었어요. 다만 성수기라 그런지 대관료가 다소 부담스러웠습니다. 재이용 의사는 있어요.</p>
+        <div class="my-review-actions">
+          <button class="btn btn-ghost btn-sm" data-edit-review>수정</button>
+          <button class="btn btn-ghost btn-sm danger" data-delete-review>삭제</button>
+        </div>
+      </div>
+
+      <div class="glass-card my-review-card fade-up"
+           data-price="4" data-access="3" data-facility="4" data-service="4"
+           data-month="2025-12"
+           data-text="주차 공간이 넓어서 대형 부스 반입이 수월했어요. 다만 피크타임에는 진입 대기가 조금 길었습니다.">
+        <div class="review-top">
+          <div>
+            <div class="my-review-facility"><a href="facility.html">부산 벡스코 제2전시장</a></div>
+            <div class="review-meta">2025.12 이용 · 2025.12.08 작성</div>
+          </div>
+        </div>
+        <div class="review-rating-row">
+          <span class="rating-chip">가격 <span class="rating-num">★4</span></span>
+          <span class="rating-chip">접근성 <span class="rating-num">★3</span></span>
+          <span class="rating-chip">시설 <span class="rating-num">★4</span></span>
+          <span class="rating-chip">서비스 <span class="rating-num">★4</span></span>
+        </div>
+        <p class="review-body">주차 공간이 넓어서 대형 부스 반입이 수월했어요. 다만 피크타임에는 진입 대기가 조금 길었습니다.</p>
+        <div class="my-review-actions">
+          <button class="btn btn-ghost btn-sm" data-edit-review>수정</button>
+          <button class="btn btn-ghost btn-sm danger" data-delete-review>삭제</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="glass-card empty-state" id="myEmptyState" style="display:none; margin-top:24px;">
+      <div class="icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </div>
+      <p>아직 작성한 리뷰가 없어요</p>
+      <a href="index.html" class="btn btn-outline btn-sm">시설 둘러보기</a>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div>
+      <div class="footer-brand">VenuePick</div>
+      <div>이해관계 없는 실사용자 인증 리뷰로 MICE 시설·벤더 선정의 정보 비대칭을 해소합니다.</div>
+    </div>
+    <div>© 2026 VenuePick. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- 리뷰 수정 모달 -->
+<div class="modal-overlay" id="editReviewModal">
+  <div class="modal-review">
+    <div class="modal-head">
+      <h3>리뷰 수정</h3>
+      <button class="modal-close" data-close-edit-modal aria-label="닫기">×</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">카테고리별 평점</label>
+      <div class="rating-input-row">
+        <span class="cat-name">가격</span>
+        <div class="star-picker" data-key="price" data-value="0">
+          <button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button>
+        </div>
+      </div>
+      <div class="rating-input-row">
+        <span class="cat-name">접근성</span>
+        <div class="star-picker" data-key="access" data-value="0">
+          <button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button>
+        </div>
+      </div>
+      <div class="rating-input-row">
+        <span class="cat-name">시설</span>
+        <div class="star-picker" data-key="facility" data-value="0">
+          <button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button>
+        </div>
+      </div>
+      <div class="rating-input-row">
+        <span class="cat-name">서비스</span>
+        <div class="star-picker" data-key="service" data-value="0">
+          <button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button><button type="button">★</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="editReviewText">이용 경험을 남겨주세요 (최소 20자)</label>
+      <textarea class="form-textarea" id="editReviewText" placeholder="예: 네트워크가 안정적이었고, 하역장 접근이 편리했어요..."></textarea>
+      <div class="char-counter">0 / 20자 이상</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">이용 시기</label>
+      <input type="month" class="filter-select" id="editReviewMonth" style="width:100%;" />
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-close-edit-modal>취소</button>
+      <button class="btn btn-primary" data-submit-edit disabled>저장하기</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
