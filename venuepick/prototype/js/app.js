@@ -7,11 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
   initDonutCharts();
   initWordclouds();
   initReviewModal();
-  initMyPageActions();
-  initEditReviewModal();
   initFacilityGrid();
   initFacilityDetail();
   initAuth();
+  initMyPage();
 });
 
 /* ---------- Google 소셜 로그인 (Supabase Auth) ----------
@@ -456,125 +455,99 @@ function showToast(message) {
   toast._timer = setTimeout(() => toast.classList.remove("show"), 2600);
 }
 
-/* ---------- mypage: 삭제 데모 ---------- */
-function initMyPageActions() {
+/* ---------- 마이페이지: 내가 쓴 리뷰 (Supabase reviews 조회) ----------
+   비로그인 / 로그인+리뷰없음 / 로그인+리뷰있음 세 가지 상태를 전환하며,
+   facility_id는 facilities.json 과 매칭해 시설명을 보여준다. */
+function initMyPage() {
   const list = document.getElementById("myReviewList");
-  if (!list) return;
+  if (!list || typeof supabaseClient === "undefined") return;
 
-  function syncEmptyState() {
-    const remaining = list.querySelectorAll(".my-review-card").length;
-    const countEl = document.getElementById("myReviewCount");
-    const emptyEl = document.getElementById("myEmptyState");
-    if (countEl) countEl.textContent = remaining;
-    if (emptyEl) emptyEl.style.display = remaining === 0 ? "block" : "none";
+  const loginRequired = document.getElementById("loginRequiredState");
+  const emptyState = document.getElementById("myEmptyState");
+  const profileCard = document.getElementById("profileCard");
+  const pageHeader = document.getElementById("myPageHeader");
+  const countEl = document.getElementById("myReviewCount");
+  const loginBtn = document.getElementById("myPageLoginBtn");
+
+  if (loginBtn) loginBtn.addEventListener("click", () => loginWithGoogle());
+
+  function showOnly(target) {
+    [emptyState, list].forEach((node) => {
+      if (node) node.style.display = node === target ? "" : "none";
+    });
   }
 
-  list.querySelectorAll("[data-delete-review]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const card = btn.closest(".my-review-card");
-      if (!card) return;
-      if (confirm("이 리뷰를 삭제할까요?")) {
-        card.remove();
-        showToast("리뷰를 삭제했어요.");
-        syncEmptyState();
-      }
-    });
-  });
-
-  syncEmptyState();
-}
-
-/* ---------- mypage: 리뷰 수정 모달 ---------- */
-function initEditReviewModal() {
-  const overlay = document.getElementById("editReviewModal");
-  if (!overlay) return;
-
-  const closeBtns = overlay.querySelectorAll("[data-close-edit-modal]");
-  const textarea = overlay.querySelector("#editReviewText");
-  const counter = overlay.querySelector(".char-counter");
-  const monthInput = overlay.querySelector("#editReviewMonth");
-  const submitBtn = overlay.querySelector("[data-submit-edit]");
-  const pickers = overlay.querySelectorAll(".star-picker");
-  const MIN_CHARS = 20;
-  const CAT_LABEL = { price: "가격", access: "접근성", facility: "시설", service: "서비스" };
-
-  let activeCard = null;
-
-  function setPicker(picker, value) {
-    const stars = [...picker.querySelectorAll("button")];
-    stars.forEach((s, i) => s.classList.toggle("filled", i < value));
-    picker.dataset.value = value;
+  function formatDate(isoString) {
+    const d = new Date(isoString);
+    return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
   }
 
-  function openModal(card) {
-    activeCard = card;
-    pickers.forEach((picker) => {
-      const key = picker.dataset.key;
-      setPicker(picker, Number(card.dataset[key] || 0));
-    });
-    textarea.value = card.dataset.text || "";
-    monthInput.value = card.dataset.month || "";
-    validate();
-    overlay.classList.add("open");
-    document.body.style.overflow = "hidden";
-  }
-  function closeModal() {
-    overlay.classList.remove("open");
-    document.body.style.overflow = "";
-    activeCard = null;
-  }
-
-  document.querySelectorAll("[data-edit-review]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const card = btn.closest(".my-review-card");
-      if (card) openModal(card);
-    });
-  });
-  closeBtns.forEach((btn) => btn.addEventListener("click", closeModal));
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) closeModal();
-  });
-
-  function validate() {
-    const len = textarea.value.trim().length;
-    counter.textContent = `${len} / ${MIN_CHARS}자 이상`;
-    counter.classList.toggle("ok", len >= MIN_CHARS);
-    submitBtn.disabled = len < MIN_CHARS;
-  }
-  textarea.addEventListener("input", validate);
-
-  pickers.forEach((picker) => {
-    const stars = [...picker.querySelectorAll("button")];
-    stars.forEach((star, idx) => {
-      star.addEventListener("click", () => setPicker(picker, idx + 1));
-    });
-  });
-
-  submitBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (submitBtn.disabled || !activeCard) return;
-
-    const card = activeCard;
-    const newText = textarea.value.trim();
-    card.dataset.text = newText;
-    card.dataset.month = monthInput.value;
-    pickers.forEach((picker) => {
-      card.dataset[picker.dataset.key] = picker.dataset.value;
-    });
-
-    const chipRow = card.querySelector(".review-rating-row");
-    if (chipRow) {
-      chipRow.innerHTML = Object.keys(CAT_LABEL)
-        .map(
-          (key) =>
-            `<span class="rating-chip">${CAT_LABEL[key]} <span class="rating-num">★${card.dataset[key]}</span></span>`
-        )
-        .join("");
+  supabaseClient.auth.getUser().then(async ({ data: { user } }) => {
+    if (!user) {
+      if (profileCard) profileCard.style.display = "none";
+      if (pageHeader) pageHeader.style.display = "none";
+      list.style.display = "none";
+      if (emptyState) emptyState.style.display = "none";
+      if (loginRequired) loginRequired.style.display = "";
+      return;
     }
-    const body = card.querySelector(".review-body");
-    if (body) body.textContent = newText;
 
-    closeModal();
-    showToast("리뷰가 수정되었어요.");
+    if (loginRequired) loginRequired.style.display = "none";
+    if (profileCard) profileCard.style.display = "";
+    if (pageHeader) pageHeader.style.display = "";
+
+    const emailEl = document.getElementById("profileEmail");
+    if (emailEl) emailEl.textContent = user.email || "";
+    const avatarEl = document.getElementById("profileAvatar");
+    if (avatarEl) avatarEl.textContent = (user.email || "?").charAt(0).toUpperCase();
+
+    const [{ data: reviews, error }, facilities] = await Promise.all([
+      supabaseClient
+        .from("reviews")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false }),
+      fetch(jsonPath("facilities.json")).then((res) => res.json()),
+    ]);
+
+    if (error) {
+      console.error("내 리뷰를 불러오지 못했습니다.", error);
+      showOnly(emptyState);
+      return;
+    }
+
+    if (countEl) countEl.textContent = reviews.length;
+
+    if (!reviews.length) {
+      showOnly(emptyState);
+      return;
+    }
+
+    list.innerHTML = reviews
+      .map((r) => {
+        const facility = facilities.find((f) => f.id === r.facility_id);
+        const facilityLabel = facility
+          ? `<a href="facility.html?id=${facility.id}">${facility.name}</a>`
+          : "알 수 없는 시설";
+        return `
+      <div class="glass-card my-review-card fade-up">
+        <div class="review-top">
+          <div>
+            <div class="my-review-facility">${facilityLabel}</div>
+            <div class="review-meta">${formatDate(r.created_at)} 작성</div>
+          </div>
+          ${r.is_verified ? '<span class="badge-verified">✓ 인증된 이용 후기</span>' : ""}
+        </div>
+        <div class="review-rating-row">
+          <span class="rating-chip">가격 <span class="rating-num">★${r.price_rating}</span></span>
+          <span class="rating-chip">접근성 <span class="rating-num">★${r.accessibility_rating}</span></span>
+          <span class="rating-chip">시설 <span class="rating-num">★${r.facility_rating}</span></span>
+          <span class="rating-chip">서비스 <span class="rating-num">★${r.service_rating}</span></span>
+        </div>
+        <p class="review-body">${r.review_text}</p>
+      </div>`;
+      })
+      .join("");
+    showOnly(list);
   });
 }
