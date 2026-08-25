@@ -83,7 +83,40 @@ function initFacilityGrid() {
     .catch((err) => console.error("시설 목록을 불러오지 못했습니다.", err));
 }
 
-/* ---------- 상세: 시설 정보 + 리뷰 목록 (facilities.json / reviews.json) ---------- */
+/* ---------- 상세: 시설 정보 + 리뷰 목록 (facilities.json / reviews.json + 실시간 작성 리뷰) ----------
+   currentFacility / currentFacilityReviews 는 리뷰 작성 모달(initReviewModal)에서도 참조해
+   새로 등록한 리뷰를 같은 목록에 즉시 반영하는 데 사용한다. */
+let currentFacility = null;
+let currentFacilityReviews = [];
+
+function renderReviewList() {
+  const sectionTitle = document.querySelector(".section-title");
+  if (sectionTitle) sectionTitle.textContent = `이용자 리뷰 ${currentFacility.totalReviewCount}개`;
+  const sectionDesc = document.querySelector(".section-desc");
+  if (sectionDesc) sectionDesc.textContent = `전체 리뷰 중 대표 리뷰 ${currentFacilityReviews.length}개를 보여드려요.`;
+
+  const list = document.querySelector(".review-list");
+  if (!list) return;
+  list.innerHTML = currentFacilityReviews
+    .map(
+      (r) => `
+  <div class="glass-card review-card fade-up">
+    <div class="review-top">
+      <div class="review-name">${r.date} 이용</div>
+      ${r.isVerified ? '<span class="badge-verified">✓ 인증된 이용 후기</span>' : ""}
+    </div>
+    <div class="review-rating-row">
+      <span class="rating-chip">가격 <span class="rating-num">★${r.priceRating}</span></span>
+      <span class="rating-chip">접근성 <span class="rating-num">★${r.accessibilityRating}</span></span>
+      <span class="rating-chip">시설 <span class="rating-num">★${r.facilityRating}</span></span>
+      <span class="rating-chip">서비스 <span class="rating-num">★${r.serviceRating}</span></span>
+    </div>
+    <p class="review-body">${r.text}</p>
+  </div>`
+    )
+    .join("");
+}
+
 function initFacilityDetail() {
   const titleEl = document.querySelector(".detail-title");
   if (!titleEl) return;
@@ -97,6 +130,8 @@ function initFacilityDetail() {
     .then(([facilities, reviews]) => {
       const facility = facilities.find((f) => f.id === facilityId) || facilities[0];
       const facilityReviews = reviews.filter((r) => r.facilityId === facility.id);
+      currentFacility = facility;
+      currentFacilityReviews = facilityReviews;
 
       document.title = `${facility.name} | 베뉴픽`;
       const metaDesc = document.querySelector('meta[name="description"]');
@@ -146,32 +181,7 @@ function initFacilityDetail() {
         initDonutCharts();
       }
 
-      const sectionTitle = document.querySelector(".section-title");
-      if (sectionTitle) sectionTitle.textContent = `이용자 리뷰 ${facility.totalReviewCount}개`;
-      const sectionDesc = document.querySelector(".section-desc");
-      if (sectionDesc) sectionDesc.textContent = `전체 리뷰 중 대표 리뷰 ${facilityReviews.length}개를 보여드려요.`;
-
-      const list = document.querySelector(".review-list");
-      if (list) {
-        list.innerHTML = facilityReviews
-          .map(
-            (r) => `
-        <div class="glass-card review-card fade-up">
-          <div class="review-top">
-            <div class="review-name">${r.date} 이용</div>
-            ${r.isVerified ? '<span class="badge-verified">✓ 인증된 이용 후기</span>' : ""}
-          </div>
-          <div class="review-rating-row">
-            <span class="rating-chip">가격 <span class="rating-num">★${r.priceRating}</span></span>
-            <span class="rating-chip">접근성 <span class="rating-num">★${r.accessibilityRating}</span></span>
-            <span class="rating-chip">시설 <span class="rating-num">★${r.facilityRating}</span></span>
-            <span class="rating-chip">서비스 <span class="rating-num">★${r.serviceRating}</span></span>
-          </div>
-          <p class="review-body">${r.text}</p>
-        </div>`
-          )
-          .join("");
-      }
+      renderReviewList();
     })
     .catch((err) => console.error("시설 상세 정보를 불러오지 못했습니다.", err));
 }
@@ -313,24 +323,37 @@ function initReviewModal() {
     if (e.target === overlay) closeModal();
   });
 
+  const starPickers = [...overlay.querySelectorAll(".star-picker[data-key]")];
+
   function validate() {
     const len = textarea.value.trim().length;
     counter.textContent = `${len} / ${MIN_CHARS}자 이상`;
     counter.classList.toggle("ok", len >= MIN_CHARS);
-    submitBtn.disabled = len < MIN_CHARS;
+    const allRated = starPickers.every((picker) => Number(picker.dataset.value) >= 1);
+    submitBtn.disabled = len < MIN_CHARS || !allRated;
   }
   if (textarea) {
     textarea.addEventListener("input", validate);
     validate();
   }
 
+  function resetForm() {
+    textarea.value = "";
+    starPickers.forEach((picker) => {
+      picker.dataset.value = "0";
+      picker.querySelectorAll("button").forEach((s) => s.classList.remove("filled"));
+    });
+    validate();
+  }
+
   // 별점 선택
-  overlay.querySelectorAll(".star-picker").forEach((picker) => {
+  starPickers.forEach((picker) => {
     const stars = [...picker.querySelectorAll("button")];
     stars.forEach((star, idx) => {
       star.addEventListener("click", () => {
         stars.forEach((s, i) => s.classList.toggle("filled", i <= idx));
         picker.dataset.value = idx + 1;
+        validate();
       });
     });
   });
@@ -350,15 +373,71 @@ function initReviewModal() {
   }
 
   if (submitBtn) {
-    submitBtn.addEventListener("click", (e) => {
+    submitBtn.addEventListener("click", async (e) => {
       e.preventDefault();
-      if (submitBtn.disabled) return;
+      if (submitBtn.disabled || !currentFacility) return;
+
+      const {
+        data: { user },
+      } = await supabaseClient.auth.getUser();
+      if (!user) {
+        showToast("리뷰를 작성하려면 로그인이 필요해요.");
+        closeModal();
+        await loginWithGoogle();
+        return;
+      }
+
+      const ratings = {};
+      starPickers.forEach((picker) => {
+        ratings[picker.dataset.key] = Number(picker.dataset.value);
+      });
+      const reviewText = textarea.value.trim();
+
+      const hasAllRatings = ["price", "accessibility", "facility", "service"].every(
+        (key) => Number.isInteger(ratings[key]) && ratings[key] >= 1 && ratings[key] <= 5
+      );
+      if (!hasAllRatings) {
+        showToast("모든 항목의 별점을 선택해주세요.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      const { error } = await supabaseClient.from("reviews").insert({
+        facility_id: currentFacility.id,
+        user_id: user.id,
+        price_rating: ratings.price,
+        accessibility_rating: ratings.accessibility,
+        facility_rating: ratings.facility,
+        service_rating: ratings.service,
+        review_text: reviewText,
+      });
+
+      if (error) {
+        console.error("리뷰 등록 실패", error);
+        showToast("리뷰 등록에 실패했어요. 잠시 후 다시 시도해주세요.");
+        submitBtn.disabled = false;
+        return;
+      }
+
+      currentFacility.totalReviewCount += 1;
+      currentFacilityReviews = [
+        {
+          facilityId: currentFacility.id,
+          isVerified: false,
+          priceRating: ratings.price,
+          accessibilityRating: ratings.accessibility,
+          facilityRating: ratings.facility,
+          serviceRating: ratings.service,
+          text: reviewText,
+          date: new Date().toISOString().slice(0, 7),
+        },
+        ...currentFacilityReviews,
+      ];
+      renderReviewList();
+
       closeModal();
       showToast("리뷰가 등록되었어요. 소중한 경험 감사합니다!");
-      if (textarea) {
-        textarea.value = "";
-        validate();
-      }
+      resetForm();
     });
   }
 }
