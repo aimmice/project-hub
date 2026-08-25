@@ -11,7 +11,35 @@ document.addEventListener("DOMContentLoaded", () => {
   initEditReviewModal();
   initFacilityGrid();
   initFacilityDetail();
+  initAuth();
 });
+
+/* ---------- Google 소셜 로그인 (Supabase Auth) ----------
+   supabase-client.js 에서 만든 전역 supabaseClient 를 사용해
+   세션 상태에 따라 헤더의 로그인/로그아웃 버튼을 전환한다. */
+function initAuth() {
+  const authBtn = document.getElementById("authBtn");
+  if (!authBtn || typeof supabaseClient === "undefined") return;
+
+  function render(session) {
+    authBtn.textContent = session ? "로그아웃" : "로그인";
+  }
+
+  supabaseClient.auth.getSession().then(({ data }) => render(data.session));
+  supabaseClient.auth.onAuthStateChange((_event, session) => render(session));
+
+  authBtn.addEventListener("click", async () => {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data.session) {
+      await supabaseClient.auth.signOut();
+    } else {
+      await supabaseClient.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.href },
+      });
+    }
+  });
+}
 
 /* ---------- 공통: JSON 데이터 경로 ----------
    index.html(루트)과 prototype/index.html, prototype/facility.html이
