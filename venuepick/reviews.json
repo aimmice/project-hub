@@ -1,0 +1,25 @@
+[
+  { "id": 1, "facilityId": 1, "isVerified": true, "priceRating": 3, "accessibilityRating": 5, "facilityRating": 4, "serviceRating": 4, "text": "국제 컨퍼런스라 하이브리드 세션이 필수였는데, 인터넷 회선은 확실히 안정적이었어요. 다만 성수기라 6개월 전에 예약 안 하면 원하는 날짜 못 잡습니다.", "date": "2026-05" },
+  { "id": 2, "facilityId": 1, "isVerified": true, "priceRating": 3, "accessibilityRating": 5, "facilityRating": 4, "serviceRating": 3, "text": "참가자들이 대중교통으로 오기 편해서 만족도가 높았어요. 다만 부스 자재 반입할 때 하역장에서 홀까지 거리가 꽤 있어서 세팅 시간을 넉넉히 잡아야 했습니다.", "date": "2026-04" },
+  { "id": 3, "facilityId": 1, "isVerified": false, "priceRating": 2, "accessibilityRating": 4, "facilityRating": 3, "serviceRating": 3, "text": "소규모 세미나였는데 공간이 너무 커서 오히려 휑한 느낌이 났어요. 예산도 저희 같은 소규모엔 부담스러운 수준이었습니다.", "date": "2026-03" },
+
+  { "id": 4, "facilityId": 2, "isVerified": true, "priceRating": 4, "accessibilityRating": 3, "facilityRating": 5, "serviceRating": 4, "text": "해외 바이어들이 인천공항에서 바로 이동하기 편해서 국제 행사엔 최적이었어요. 다만 서울 시내 참가자들은 이동 시간 때문에 불만이 좀 있었습니다.", "date": "2026-06" },
+  { "id": 5, "facilityId": 2, "isVerified": false, "priceRating": 4, "accessibilityRating": 3, "facilityRating": 5, "serviceRating": 3, "text": "시설 자체는 정말 깨끗하고 최신이에요. 근데 저녁 세션 끝나고 다들 돌아갈 때 대중교통 배차가 뜸해서 택시 잡느라 고생했어요.", "date": "2026-05" },
+  { "id": 6, "facilityId": 2, "isVerified": true, "priceRating": 4, "accessibilityRating": 4, "facilityRating": 4, "serviceRating": 4, "text": "주차공간이 넉넉해서 차로 오시는 참가자들 스트레스가 적었어요. 대신 근처에 마땅한 식당이 적어서 케이터링 의존도가 높았습니다.", "date": "2026-02" },
+
+  { "id": 7, "facilityId": 3, "isVerified": true, "priceRating": 4, "accessibilityRating": 3, "facilityRating": 5, "serviceRating": 4, "text": "부스 시공업체 입장에서 하역장이 정말 편했어요. 트럭 여러 대가 동시에 들어와도 동선이 안 꼬이더라고요.", "date": "2026-06" },
+  { "id": 8, "facilityId": 3, "isVerified": false, "priceRating": 3, "accessibilityRating": 2, "facilityRating": 4, "serviceRating": 3, "text": "지역 특성상 서울 참가자들 항공·KTX 비용까지 감안해야 해서 예산 짜기가 까다로웠어요.", "date": "2026-04" },
+  { "id": 9, "facilityId": 3, "isVerified": true, "priceRating": 4, "accessibilityRating": 3, "facilityRating": 4, "serviceRating": 3, "text": "전시 성수기라 그런지 네트워크가 가끔 끊겼어요. 부스마다 와이파이 신호가 약해지는 시간대가 있더라고요.", "date": "2026-01" },
+
+  { "id": 10, "facilityId": 4, "isVerified": true, "priceRating": 2, "accessibilityRating": 4, "facilityRating": 5, "serviceRating": 5, "text": "시상식 행사였는데 분위기가 정말 고급스러워서 참가자 반응이 좋았어요. 직원분들도 요청하면 바로바로 대응해주셔서 편했습니다.", "date": "2026-05" },
+  { "id": 11, "facilityId": 4, "isVerified": true, "priceRating": 2, "accessibilityRating": 4, "facilityRating": 5, "serviceRating": 5, "text": "숙박이랑 행사장이 한 건물이라 해외 VIP 초청할 때 동선이 정말 편했어요.", "date": "2026-03" },
+  { "id": 12, "facilityId": 4, "isVerified": false, "priceRating": 1, "accessibilityRating": 4, "facilityRating": 4, "serviceRating": 4, "text": "대관료가 확실히 비싸고, 최소 케이터링 매출 조건이 있어서 예산 짜기 전에 꼭 확인하셔야 해요.", "date": "2026-02" },
+
+  { "id": 13, "facilityId": 5, "isVerified": true, "priceRating": 5, "accessibilityRating": 3, "facilityRating": 4, "serviceRating": 4, "text": "학회 특성상 여러 세션을 동시에 진행해야 했는데, 층별로 공간이 나뉘어 있어서 운영이 수월했어요.", "date": "2026-06" },
+  { "id": 14, "facilityId": 5, "isVerified": false, "priceRating": 5, "accessibilityRating": 2, "facilityRating": 3, "serviceRating": 3, "text": "대관료가 서울 대비 확실히 합리적이었어요. 다만 3층이라 무거운 장비 옮길 때 엘리베이터 기다리는 시간이 좀 걸렸습니다.", "date": "2026-04" },
+  { "id": 15, "facilityId": 5, "isVerified": true, "priceRating": 5, "accessibilityRating": 3, "facilityRating": 4, "serviceRating": 4, "text": "저녁에 참가자들끼리 네트워킹할만한 장소가 마땅치 않아서 아쉬웠어요.", "date": "2026-01" },
+
+  { "id": 16, "facilityId": 6, "isVerified": true, "priceRating": 2, "accessibilityRating": 4, "facilityRating": 5, "serviceRating": 5, "text": "해외 참가자 중에 할랄 식단 필요한 분들이 있었는데, 사전에 요청드리니 꼼꼼하게 맞춰주셔서 좋았어요.", "date": "2026-05" },
+  { "id": 17, "facilityId": 6, "isVerified": true, "priceRating": 3, "accessibilityRating": 4, "facilityRating": 5, "serviceRating": 4, "text": "사전 시식을 해볼 수 있어서 메뉴 확정할 때 확신을 갖고 결정할 수 있었습니다.", "date": "2026-03" },
+  { "id": 18, "facilityId": 6, "isVerified": false, "priceRating": 2, "accessibilityRating": 3, "facilityRating": 4, "serviceRating": 3, "text": "예약을 좀 늦게 했더니 성수기라 원하는 날짜에 케이터링 팀 배정이 어려웠어요. 최소 3개월 전엔 컨택해야 할 것 같아요.", "date": "2026-02" }
+]

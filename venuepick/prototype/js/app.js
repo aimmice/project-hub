@@ -9,7 +9,140 @@ document.addEventListener("DOMContentLoaded", () => {
   initReviewModal();
   initMyPageActions();
   initEditReviewModal();
+  initFacilityGrid();
+  initFacilityDetail();
 });
+
+/* ---------- 공통: JSON 데이터 경로 ----------
+   index.html(루트)과 prototype/index.html, prototype/facility.html이
+   같은 app.js를 공유하므로, 현재 경로가 /prototype/ 하위인지로
+   facilities.json / reviews.json 의 상대 경로를 판단한다. */
+function inPrototypeDir() {
+  return location.pathname.includes("/prototype/");
+}
+function jsonPath(file) {
+  return (inPrototypeDir() ? "../" : "") + file;
+}
+
+/* ---------- 홈: 시설 카드 목록 (facilities.json) ---------- */
+function initFacilityGrid() {
+  const grid = document.querySelector(".facility-grid");
+  if (!grid) return;
+  const hrefBase = inPrototypeDir() ? "" : "prototype/";
+
+  fetch(jsonPath("facilities.json"))
+    .then((res) => res.json())
+    .then((facilities) => {
+      grid.innerHTML = facilities
+        .map(
+          (f) => `
+      <a href="${hrefBase}facility.html?id=${f.id}" class="glass-card card-facility fade-up" style="text-decoration:none; color:inherit;">
+        <div class="thumb">${f.name}</div>
+        <h3 class="name">${f.name}</h3>
+        <div class="region">${f.region} · ${f.type}</div>
+        <div class="meta-row">
+          <span class="rating-num">★ ${f.rating}</span>
+          <span class="review-count">리뷰 ${f.totalReviewCount}개</span>
+        </div>
+      </a>`
+        )
+        .join("");
+    })
+    .catch((err) => console.error("시설 목록을 불러오지 못했습니다.", err));
+}
+
+/* ---------- 상세: 시설 정보 + 리뷰 목록 (facilities.json / reviews.json) ---------- */
+function initFacilityDetail() {
+  const titleEl = document.querySelector(".detail-title");
+  if (!titleEl) return;
+
+  const facilityId = Number(new URLSearchParams(location.search).get("id")) || 1;
+
+  Promise.all([
+    fetch(jsonPath("facilities.json")).then((res) => res.json()),
+    fetch(jsonPath("reviews.json")).then((res) => res.json()),
+  ])
+    .then(([facilities, reviews]) => {
+      const facility = facilities.find((f) => f.id === facilityId) || facilities[0];
+      const facilityReviews = reviews.filter((r) => r.facilityId === facility.id);
+
+      document.title = `${facility.name} | 베뉴픽`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          "content",
+          `${facility.name} 실사용자 인증 리뷰, AI 장단점 요약, 항목별 만족도 대시보드.`
+        );
+      }
+      const breadcrumbType = document.querySelector(".breadcrumb-type");
+      if (breadcrumbType) breadcrumbType.textContent = facility.type;
+
+      titleEl.textContent = facility.name;
+      const subEl = document.querySelector(".detail-sub");
+      if (subEl) {
+        subEl.textContent = `${facility.region} · ${facility.type} · 최대 ${facility.capacity.toLocaleString()}명 수용`;
+      }
+      const ratingNumEl = document.querySelector(".detail-rating-row .rating-num.lg");
+      if (ratingNumEl) ratingNumEl.textContent = facility.rating.toFixed(1);
+      const reviewCountEl = document.querySelector(".detail-rating-row .review-count");
+      if (reviewCountEl) {
+        reviewCountEl.textContent = `리뷰 ${facility.totalReviewCount}개 · 인증 리뷰 ${facility.verifiedRatio}%`;
+      }
+
+      const summaryHeading = document.querySelector(".ai-summary-head h3");
+      if (summaryHeading) summaryHeading.textContent = `${facility.totalReviewCount}개 리뷰에서 자동으로 뽑은 장단점`;
+      const prosList = document.querySelector(".ai-col.pros ul");
+      if (prosList) prosList.innerHTML = facility.pros.map((p) => `<li>${p}</li>`).join("");
+      const consList = document.querySelector(".ai-col.cons ul");
+      if (consList) consList.innerHTML = facility.cons.map((c) => `<li>${c}</li>`).join("");
+
+      const statValues = document.querySelectorAll(".stat-card .stat-value");
+      if (statValues[0]) statValues[0].innerHTML = `${facility.rating.toFixed(1)}<small>/ 5.0</small>`;
+      if (statValues[1]) statValues[1].innerHTML = `${facility.totalReviewCount}<small>건</small>`;
+      if (statValues[2]) statValues[2].innerHTML = `${facility.verifiedRatio}<small>%</small>`;
+
+      const donut = document.querySelector("[data-donut] .donut");
+      if (donut && facilityReviews.length) {
+        const avg = (key) =>
+          Number((facilityReviews.reduce((sum, r) => sum + r[key], 0) / facilityReviews.length).toFixed(1));
+        donut.dataset.segments = JSON.stringify([
+          { label: "시설", value: avg("facilityRating"), color: "#3e6bff" },
+          { label: "서비스", value: avg("serviceRating"), color: "#4f8cff" },
+          { label: "접근성", value: avg("accessibilityRating"), color: "#6fa0ff" },
+          { label: "가격", value: avg("priceRating"), color: "#8ab4ff" },
+        ]);
+        initDonutCharts();
+      }
+
+      const sectionTitle = document.querySelector(".section-title");
+      if (sectionTitle) sectionTitle.textContent = `이용자 리뷰 ${facility.totalReviewCount}개`;
+      const sectionDesc = document.querySelector(".section-desc");
+      if (sectionDesc) sectionDesc.textContent = `전체 리뷰 중 대표 리뷰 ${facilityReviews.length}개를 보여드려요.`;
+
+      const list = document.querySelector(".review-list");
+      if (list) {
+        list.innerHTML = facilityReviews
+          .map(
+            (r) => `
+        <div class="glass-card review-card fade-up">
+          <div class="review-top">
+            <div class="review-name">${r.date} 이용</div>
+            ${r.isVerified ? '<span class="badge-verified">✓ 인증된 이용 후기</span>' : ""}
+          </div>
+          <div class="review-rating-row">
+            <span class="rating-chip">가격 <span class="rating-num">★${r.priceRating}</span></span>
+            <span class="rating-chip">접근성 <span class="rating-num">★${r.accessibilityRating}</span></span>
+            <span class="rating-chip">시설 <span class="rating-num">★${r.facilityRating}</span></span>
+            <span class="rating-chip">서비스 <span class="rating-num">★${r.serviceRating}</span></span>
+          </div>
+          <p class="review-body">${r.text}</p>
+        </div>`
+          )
+          .join("");
+      }
+    })
+    .catch((err) => console.error("시설 상세 정보를 불러오지 못했습니다.", err));
+}
 
 /* ---------- mobile nav ---------- */
 function initNavToggle() {

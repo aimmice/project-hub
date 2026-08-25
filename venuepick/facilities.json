@@ -1,0 +1,146 @@
+[
+  {
+    "id": 1,
+    "name": "코엑스 그랜드볼룸",
+    "region": "서울 강남",
+    "type": "컨벤션홀",
+    "capacity": 3000,
+    "rating": 4.5,
+    "totalReviewCount": 210,
+    "verifiedRatio": 72,
+    "priceRange": "800~1500만원",
+    "websiteUrl": "https://www.coex.co.kr",
+    "description": "국내 최대 규모의 국제 컨퍼런스 전용 볼룸",
+    "isVerified": true,
+    "pros": [
+      "강남역 인근 대중교통 접근성 우수",
+      "하이브리드 세션 인프라(네트워크) 안정적",
+      "주변 호텔·식당 밀집으로 참가자 편의성 높음"
+    ],
+    "cons": [
+      "성수기 예약 경쟁 치열, 대관료 높음",
+      "소규모 행사엔 공간 대비 비효율",
+      "하역장에서 홀까지 동선이 길어 반입 시간 소요"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "송도컨벤시아 오디토리움",
+    "region": "인천 송도",
+    "type": "컨벤션홀",
+    "capacity": 2000,
+    "rating": 4.1,
+    "totalReviewCount": 78,
+    "verifiedRatio": 58,
+    "priceRange": "600~1100만원",
+    "websiteUrl": "https://www.songdoconvensia.com",
+    "description": "인천공항 인접, 국제 행사 특화 신축 컨벤션 시설",
+    "isVerified": true,
+    "pros": [
+      "신축이라 시설 최신·쾌적",
+      "인천공항 인접, 해외 바이어 이동 편리",
+      "주차공간 여유로움"
+    ],
+    "cons": [
+      "서울 중심부 대비 이동거리 부담",
+      "주변 식당·호텔 인프라 상대적 부족",
+      "저녁 시간대 대중교통 배차 간격 김"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "벡스코 제2전시장",
+    "region": "부산 해운대",
+    "type": "전시장",
+    "capacity": 5000,
+    "rating": 4.3,
+    "totalReviewCount": 153,
+    "verifiedRatio": 65,
+    "priceRange": "700~1300만원",
+    "websiteUrl": "https://www.bexco.co.kr",
+    "description": "부산 지역 대표 대형 전시 특화 시설",
+    "isVerified": true,
+    "pros": [
+      "대형 전시 특화, 층고·동선 넉넉",
+      "하역장 접근성 우수, 트럭 여러 대 동시 진입 가능",
+      "부산 지역 유일 대형 전시 인프라"
+    ],
+    "cons": [
+      "서울·수도권 참가자 이동 부담",
+      "성수기 인근 호텔 가격 급등",
+      "대형 전시 밀집 시 통신 인프라 다소 불안정"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "그랜드 하얏트 서울 그랜드볼룸",
+    "region": "서울 한남",
+    "type": "호텔 연회장",
+    "capacity": 800,
+    "rating": 4.6,
+    "totalReviewCount": 102,
+    "verifiedRatio": 81,
+    "priceRange": "1000~2000만원",
+    "websiteUrl": "https://www.hyatt.com/grand-hyatt/kimich-grand-hyatt-seoul",
+    "description": "VIP 행사·시상식에 특화된 프리미엄 호텔 연회장",
+    "isVerified": true,
+    "pros": [
+      "럭셔리한 분위기, VIP 행사·시상식에 적합",
+      "호텔 객실과 한 건물, 숙박 연계 편리",
+      "직원 응대 속도 빠름"
+    ],
+    "cons": [
+      "대관료 상대적으로 높음",
+      "연회·세미나 특화, 부스 전시엔 부적합",
+      "최소 매출(케이터링) 조건 까다로움"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "대구엑스코 서관 3층 컨벤션홀",
+    "region": "대구 북구",
+    "type": "컨벤션홀",
+    "capacity": 1500,
+    "rating": 4.0,
+    "totalReviewCount": 45,
+    "verifiedRatio": 49,
+    "priceRange": "400~800만원",
+    "websiteUrl": "https://www.exco.co.kr",
+    "description": "대구·경북 지역 학술대회 특화 컨벤션 시설",
+    "isVerified": true,
+    "pros": [
+      "대구·경북 지역 학술대회 인프라 우수",
+      "상대적으로 합리적인 대관료",
+      "층별 공간 분리로 동시 세션 운영 용이"
+    ],
+    "cons": [
+      "수도권 참가자 이동시간 부담",
+      "3층이라 대형 장비 반입 시 엘리베이터 대기 발생",
+      "저녁 네트워킹 장소 제한적"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "더케이호텔서울 컨벤션 케이터링",
+    "region": "서울 양재",
+    "type": "케이터링 서비스",
+    "capacity": 1000,
+    "rating": 4.4,
+    "totalReviewCount": 63,
+    "verifiedRatio": 76,
+    "priceRange": "인당 5~8만원",
+    "websiteUrl": "https://www.thekhotel.com",
+    "description": "대규모 인원 대응이 강점인 컨벤션 전문 케이터링",
+    "isVerified": true,
+    "pros": [
+      "채식·할랄 등 메뉴 커스터마이징 폭 넓음",
+      "사전 시식 서비스 제공",
+      "대규모 인원 동시 서빙 경험 풍부"
+    ],
+    "cons": [
+      "성수기 최소 3개월 전 예약 필요",
+      "인당 단가 표준 대비 높은 편",
+      "알레르기 정보 사전 고지 누락 시 대응 지연"
+    ]
+  }
+]
