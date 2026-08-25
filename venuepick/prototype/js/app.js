@@ -17,6 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ---------- Google 소셜 로그인 (Supabase Auth) ----------
    supabase-client.js 에서 만든 전역 supabaseClient 를 사용해
    세션 상태에 따라 헤더의 로그인/로그아웃 버튼을 전환한다. */
+function loginWithGoogle() {
+  return supabaseClient.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: window.location.href.split("#")[0] },
+  });
+}
+
 function initAuth() {
   const authBtn = document.getElementById("authBtn");
   if (!authBtn || typeof supabaseClient === "undefined") return;
@@ -33,10 +40,7 @@ function initAuth() {
     if (data.session) {
       await supabaseClient.auth.signOut();
     } else {
-      await supabaseClient.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: window.location.href.split("#")[0] },
-      });
+      await loginWithGoogle();
     }
   });
 }
@@ -291,7 +295,19 @@ function initReviewModal() {
     document.body.style.overflow = "";
   };
 
-  openBtns.forEach((btn) => btn.addEventListener("click", openModal));
+  openBtns.forEach((btn) =>
+    btn.addEventListener("click", async () => {
+      if (typeof supabaseClient !== "undefined") {
+        const { data } = await supabaseClient.auth.getSession();
+        if (!data.session) {
+          showToast("리뷰를 작성하려면 로그인이 필요해요.");
+          await loginWithGoogle();
+          return;
+        }
+      }
+      openModal();
+    })
+  );
   closeBtns.forEach((btn) => btn.addEventListener("click", closeModal));
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) closeModal();
