@@ -35,7 +35,7 @@ function initAuth() {
     } else {
       await supabaseClient.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: window.location.href },
+        options: { redirectTo: window.location.href.split("#")[0] },
       });
     }
   });
