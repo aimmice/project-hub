@@ -11,7 +11,55 @@ document.addEventListener("DOMContentLoaded", () => {
   initFacilityDetail();
   initAuth();
   initMyPage();
+  initScrollReveal(); // 최초 로드 시점에 이미 DOM에 있는 fade-up 요소(정적 마크업) 처리
 });
+
+/* ---------- 스크롤 리빌 (fade-up) ----------
+   .fade-up 요소가 뷰포트에 70% 정도 들어오면 한 번만 페이드업으로 나타난다.
+   시설카드그리드/리뷰리스트처럼 fetch 이후 innerHTML로 새로 삽입되는 요소들은
+   각 렌더 함수(initFacilityGrid, renderReviewList, initMyPage)가 삽입 직후
+   이 함수를 다시 호출해 새로 추가된 요소만 관찰 대상에 등록한다. */
+function initScrollReveal() {
+  const items = document.querySelectorAll(".fade-up:not([data-reveal-init])");
+  if (!items.length) return;
+
+  // 같은 부모(그리드/리스트) 안에서 offsetTop이 같은 요소들을 "같은 줄"로 보고
+  // 줄 안에서의 순서에 따라 50~100ms 간격으로 stagger 딜레이를 부여한다.
+  const byParent = new Map();
+  items.forEach((el) => {
+    el.setAttribute("data-reveal-init", "");
+    if (!byParent.has(el.parentElement)) byParent.set(el.parentElement, []);
+    byParent.get(el.parentElement).push(el);
+  });
+
+  byParent.forEach((siblings) => {
+    let rowTop = null;
+    let indexInRow = 0;
+    siblings.forEach((el) => {
+      const top = el.offsetTop;
+      if (rowTop === null || Math.abs(top - rowTop) > 4) {
+        rowTop = top;
+        indexInRow = 0;
+      } else {
+        indexInRow += 1;
+      }
+      el.style.setProperty("--reveal-delay", `${indexInRow * 70}ms`);
+    });
+  });
+
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        obs.unobserve(entry.target); // 한 번 나타난 요소는 다시 애니메이션하지 않음
+      });
+    },
+    { threshold: 0.7 }
+  );
+
+  items.forEach((el) => observer.observe(el));
+}
 
 /* ---------- Google 소셜 로그인 (Supabase Auth) ----------
    supabase-client.js 에서 만든 전역 supabaseClient 를 사용해
@@ -78,6 +126,7 @@ function initFacilityGrid() {
       </a>`
         )
         .join("");
+      initScrollReveal();
     })
     .catch((err) => console.error("시설 목록을 불러오지 못했습니다.", err));
 }
@@ -114,6 +163,7 @@ function renderReviewList() {
   </div>`
     )
     .join("");
+  initScrollReveal();
 }
 
 function initFacilityDetail() {
@@ -191,52 +241,113 @@ function initNavToggle() {
   const links = document.querySelector(".nav-links");
   if (!toggle || !links) return;
   toggle.addEventListener("click", () => {
-    const isOpen = links.style.display === "flex";
-    links.style.display = isOpen ? "none" : "flex";
-    links.style.cssText = isOpen
-      ? "display:none;"
-      : "display:flex; position:absolute; top:100%; left:0; right:0; flex-direction:column; background:var(--glass-light-strong); backdrop-filter:blur(16px); padding:16px 24px; gap:16px; border-bottom:1px solid var(--glass-border-light);";
+    links.classList.toggle("open");
   });
 }
 
 /* ---------- donut chart (항목별 만족도) ----------
    .donut 요소의 data-segments="라벨:점수:색상,라벨:점수:색상,..." 를 읽어
-   conic-gradient 로 렌더링하고, 옆에 legend row 를 자동 생성한다. */
+   conic-gradient 로 렌더링하고, 옆에 legend row 를 자동 생성한다.
+   화면에 스크롤로 들어오는 순간(IntersectionObserver) 0%에서 실제 값까지
+   원이 채워지며 중앙 숫자/legend 값도 함께 카운트업되고, 한 번만 재생된다. */
 function initDonutCharts() {
   document.querySelectorAll("[data-donut]").forEach((wrap) => {
     const donut = wrap.querySelector(".donut");
     const legend = wrap.querySelector(".donut-legend");
+    if (!donut) return;
+
     const segments = JSON.parse(donut.dataset.segments);
-    const total = segments.reduce((s, seg) => s + seg.value, 0);
+    donut._donutSegments = segments; // 애니메이션 시점에 참조할 최신 목표값
 
-    let acc = 0;
-    const stops = segments
-      .map((seg) => {
-        const start = (acc / total) * 360;
-        acc += seg.value;
-        const end = (acc / total) * 360;
-        return `${seg.color} ${start}deg ${end}deg`;
-      })
-      .join(", ");
-    donut.style.background = `conic-gradient(${stops})`;
+    if (!donut._revealBound) {
+      donut._revealBound = true;
+      renderDonutLegendSkeleton(legend, segments);
+      renderDonutFrame(donut, legend, segments, 0);
 
-    const avg = (segments.reduce((s, seg) => s + seg.value, 0) / segments.length).toFixed(1);
-    const centerNum = donut.querySelector(".donut-center .num");
-    if (centerNum) centerNum.textContent = avg;
-
-    if (legend) {
-      legend.innerHTML = segments
-        .map(
-          (seg) => `
-        <div class="donut-legend-row">
-          <span class="swatch" style="background:${seg.color}"></span>
-          <span class="name">${seg.label}</span>
-          <span class="val">${seg.value.toFixed(1)}</span>
-        </div>`
-        )
-        .join("");
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            obs.unobserve(donut);
+            animateDonut(donut, legend);
+          });
+        },
+        { threshold: 0.5 }
+      );
+      observer.observe(donut);
+    } else if (!donut._revealed) {
+      // 아직 애니메이션 전 대기 상태 — 최신 데이터로 대기 화면(0%)만 갱신
+      renderDonutLegendSkeleton(legend, segments);
+      renderDonutFrame(donut, legend, segments, 0);
+    } else {
+      // 이미 한 번 재생됨 — 데이터가 갱신돼도 다시 재생하지 않고 최종값만 반영
+      renderDonutLegendSkeleton(legend, segments);
+      renderDonutFrame(donut, legend, segments, 1);
     }
   });
+}
+
+function renderDonutLegendSkeleton(legend, segments) {
+  if (!legend) return;
+  legend.innerHTML = segments
+    .map(
+      (seg, i) => `
+    <div class="donut-legend-row" data-legend-index="${i}">
+      <span class="swatch" style="background:${seg.color}"></span>
+      <span class="name">${seg.label}</span>
+      <span class="val">0.0</span>
+    </div>`
+    )
+    .join("");
+}
+
+function buildDonutGradient(segments, total, progress) {
+  const sweep = 360 * progress;
+  const stops = [];
+  let acc = 0;
+  segments.forEach((seg) => {
+    const start = (acc / total) * 360;
+    acc += seg.value;
+    const end = (acc / total) * 360;
+    if (start < sweep) {
+      stops.push(`${seg.color} ${start}deg ${Math.min(end, sweep)}deg`);
+    }
+  });
+  stops.push(`var(--hairline-dark) ${sweep}deg 360deg`);
+  return `conic-gradient(${stops.join(", ")})`;
+}
+
+function renderDonutFrame(donut, legend, segments, progress) {
+  const total = segments.reduce((s, seg) => s + seg.value, 0) || 1;
+  donut.style.background = buildDonutGradient(segments, total, progress);
+
+  const avg = segments.reduce((s, seg) => s + seg.value, 0) / segments.length;
+  const centerNum = donut.querySelector(".donut-center .num");
+  if (centerNum) centerNum.textContent = (avg * progress).toFixed(1);
+
+  if (legend) {
+    segments.forEach((seg, i) => {
+      const valEl = legend.querySelector(`[data-legend-index="${i}"] .val`);
+      if (valEl) valEl.textContent = (seg.value * progress).toFixed(1);
+    });
+  }
+}
+
+function animateDonut(donut, legend, duration = 1000) {
+  const segments = donut._donutSegments;
+  const start = performance.now();
+
+  function frame(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+    renderDonutFrame(donut, legend, segments, eased);
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      donut._revealed = true;
+    }
+  }
+  requestAnimationFrame(frame);
 }
 
 /* ---------- wordcloud ----------
@@ -549,5 +660,6 @@ function initMyPage() {
       })
       .join("");
     showOnly(list);
+    initScrollReveal();
   });
 }
